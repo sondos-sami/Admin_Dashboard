@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import Box from "@mui/material/Box";
@@ -23,7 +22,7 @@ export default function ScatterChartComponent({
           {
             data: data1,
             yAxisId: "leftAxis",
-            valueFormatter: (value) =>
+            valueFormatter: (value: any) =>
               value && `${value.x}cm, ${value.y}kg`,
           },
           ...(data2
@@ -31,7 +30,7 @@ export default function ScatterChartComponent({
                 {
                   data: data2,
                   yAxisId: "rightAxis",
-                  valueFormatter: (value) =>
+                  valueFormatter: (value: any) =>
                     value && `${value.x}cm, ${value.y}kg`,
                 },
               ]
@@ -41,7 +40,7 @@ export default function ScatterChartComponent({
         yAxis={[
           { id: "leftAxis", min: 0 },
           ...(data2
-            ? [{ id: "rightAxis", min: 0, position: "right" }]
+            ? [{ id: "rightAxis", min: 0, position: "right" as const }]
             : []),
         ]}
         sx={{

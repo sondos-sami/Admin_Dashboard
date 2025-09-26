@@ -28,7 +28,7 @@ function createEventId() {
 }
 
 export default function DemoApp() {
-  const [weekendsVisible, setWeekendsVisible] = useState(true);
+  const weekendsVisible = true;
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -56,9 +56,6 @@ export default function DemoApp() {
     );
   }, [currentEvents]);
 
-  function handleWeekendsToggle() {
-    setWeekendsVisible(!weekendsVisible);
-  }
 
   function handleDateSelect(selectInfo: DateSelectArg) {
     setSelectInfo(selectInfo);

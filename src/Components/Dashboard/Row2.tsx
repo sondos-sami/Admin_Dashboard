@@ -1,4 +1,4 @@
-  import { Box, Paper, Stack, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, Divider } from "@mui/material";
+  import { Paper, Stack, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, Divider } from "@mui/material";
 import LineChartComponent from "../Charts/line";
 import React from "react";
  
