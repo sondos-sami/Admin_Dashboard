@@ -1,6 +1,7 @@
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
 import Box from "@mui/material/Box";
+import { useChartWidth } from "../../hooks/useChartWidth";
 
 interface ScatterChartComponentProps {
   data1: { x: number; y: number; id: number }[];
@@ -13,11 +14,16 @@ export default function ScatterChartComponent({
   data1,
   data2,
   height = 300,
-  width = "100%",
+  width: widthProp,
 }: ScatterChartComponentProps) {
+  const [containerRef, measuredWidth] = useChartWidth();
+  const chartWidth = typeof widthProp === "number" ? widthProp : measuredWidth;
+
   return (
-    <Box sx={{ width, height }}>
+    <Box ref={containerRef} sx={{ width: widthProp ?? "100%", height, minWidth: 0 }}>
       <ScatterChart
+        width={chartWidth}
+        height={height}
         series={[
           {
             data: data1,

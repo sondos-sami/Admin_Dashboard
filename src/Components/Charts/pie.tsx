@@ -1,7 +1,6 @@
- 
- 
 import { PieChart } from "@mui/x-charts/PieChart";
 import Box from "@mui/material/Box";
+import { useChartWidth } from "../../hooks/useChartWidth";
 
 interface PieChartComponentProps {
   data?: { id: number; value: number; label: string }[];
@@ -16,21 +15,36 @@ export default function PieChartComponent({
     { id: 2, value: 30, label: "C" },
   ],
   height = 300,
-  width = "100%",
+  width: widthProp,
 }: PieChartComponentProps) {
+  const [containerRef, measuredWidth] = useChartWidth();
+  const chartWidth =
+    typeof widthProp === "number" ? widthProp : Math.min(measuredWidth, 360);
+  const outer = Math.min(chartWidth * 0.36, 120);
+  const inner = outer * 0.45;
+
   return (
-    <Box sx={{ width, height }}>
+    <Box
+      ref={containerRef}
+      sx={{
+        width: widthProp ?? "100%",
+        height,
+        minWidth: 0,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <PieChart
         series={[
           {
             data,
-            innerRadius: 40,  
-            outerRadius: 120,
+            innerRadius: inner,
+            outerRadius: outer,
             paddingAngle: 5,
             cornerRadius: 5,
           },
         ]}
-        width={300}
+        width={chartWidth}
         height={height}
       />
     </Box>

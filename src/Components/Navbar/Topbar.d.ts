@@ -1,6 +1,7 @@
 type TopbarProps = {
     open: boolean;
-    onOpen: () => void;
+    onMenuToggle: () => void;
+    isMobile: boolean;
 };
-export declare function Topbar({ open, onOpen }: TopbarProps): import("react/jsx-runtime").JSX.Element;
+export declare function Topbar({ open, onMenuToggle, isMobile }: TopbarProps): import("react/jsx-runtime").JSX.Element;
 export {};

@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Paper, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
  
 import { PieChart } from "@mui/x-charts/PieChart";
 
@@ -9,7 +9,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 export default function Row1() {
-  
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+  const pieSize = isXs ? 120 : 150;
+
   const items = [
     {
       icon: <AttachMoneyIcon fontSize="large" color="success" />,
@@ -94,13 +97,13 @@ export default function Row1() {
             series={[
               {
                 data: item.chartData,
-                innerRadius: 50,
-                outerRadius: 80,
+                innerRadius: isXs ? 40 : 50,
+                outerRadius: isXs ? 55 : 80,
                 arcLabel: (item) => item.value.toString(),
               },
             ]}
-            width={150}
-            height={150}
+            width={pieSize}
+            height={pieSize}
           />
         </Paper>
       ))}

@@ -1,6 +1,13 @@
  *{
   font-family:'Roboto',sans-serif;
  }
+
+ html,
+ body,
+ #root {
+  max-width: 100%;
+  overflow-x: hidden;
+ }
  ::-webkit-scrollbar {
   width: 0.88rem;
  }

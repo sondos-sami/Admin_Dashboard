@@ -16,14 +16,19 @@ export default function Row2() {
   ];
 
   return (
-    <Stack direction="row" gap={1} flexWrap={"wrap"} justifyContent={{sm:"center"}}>
+    <Stack
+      direction={{ xs: "column", lg: "row" }}
+      gap={1}
+      flexWrap="wrap"
+      justifyContent={{ xs: "stretch", sm: "center" }}
+    >
        
       <Paper sx={{flexGrow:1,   p: 2 }}>
         <LineChartComponent uData={uData} pData={pData} xLabels={xLabels} height={400} />
       </Paper>
 
   
-      <Paper sx={{ flexGrow:1,  p: 2 }}>
+      <Paper sx={{ flexGrow: 1, p: 2, minWidth: 0, width: "100%" }}>
         <Typography variant="h6" gutterBottom>
           Recent Transactions
         </Typography>

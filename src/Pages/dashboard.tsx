@@ -13,18 +13,22 @@ export default function Dashboard() {
       <Box
         sx={{
           display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: { xs: "stretch", sm: "center" },
+          gap: { xs: 2, sm: 0 },
           mb: 3,
         }}
       >
-      
-
-        <Header title="Dashboard" subtitle="Welcome to Dashboard"/>
+        <Header title="Dashboard" subtitle="Welcome to Dashboard" />
         <Button
           variant="contained"
           startIcon={<DownloadIcon />}
-          sx={{ textTransform: "none", borderRadius: 2 }}
+          sx={{
+            textTransform: "none",
+            borderRadius: 2,
+            alignSelf: { xs: "stretch", sm: "auto" },
+          }}
         >
           Download Reports
         </Button>

@@ -5,5 +5,5 @@ interface LineChartComponentProps {
     height?: number;
     width?: number | string;
 }
-export default function LineChartComponent({ uData, pData, xLabels, height, width, }: LineChartComponentProps): import("react/jsx-runtime").JSX.Element;
+export default function LineChartComponent({ uData, pData, xLabels, height, width: widthProp, }: LineChartComponentProps): import("react/jsx-runtime").JSX.Element;
 export {};

@@ -1,4 +1,3 @@
- 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,7 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box } from "@mui/material";
+import { Box, Stack, Typography, Chip, useMediaQuery, useTheme } from "@mui/material";
 import Header from "../Components/Header";
 
 interface TeamMember {
@@ -26,13 +25,77 @@ const rows: TeamMember[] = [
   { id: 5, name: "Michael Johnson", age: 37, email: "michael@example.com", role: "admin", phone: "999-888-7777" },
 ];
 
-export default function Team() {
-  return (
-    <Box sx={{ p: 2 }}>
-        <Header title="Team Members" subtitle="Managing Team Members"/>
-  
+function roleColor(role: TeamMember["role"]) {
+  if (role === "admin") return "error";
+  if (role === "manager") return "primary";
+  return "success";
+}
 
-      <TableContainer component={Paper} sx={{ width: "100%", overflowX: "auto" }}>
+export default function Team() {
+  const theme = useTheme();
+  const isNarrow = useMediaQuery(theme.breakpoints.down("md"));
+
+  if (isNarrow) {
+    return (
+      <Box sx={{ p: { xs: 1, sm: 2 }, width: "100%", minWidth: 0, maxWidth: "100%" }}>
+        <Header title="Team Members" subtitle="Managing Team Members" />
+        <Stack spacing={1.5} sx={{ mt: 1 }}>
+          {rows.map((row) => (
+            <Paper
+              key={row.id}
+              elevation={1}
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                border: 1,
+                borderColor: "divider",
+              }}
+            >
+              <Stack spacing={1}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 1 }}>
+                  <Typography variant="subtitle1" fontWeight={600}>
+                    {row.name}
+                  </Typography>
+                  <Chip label={row.role} size="small" color={roleColor(row.role)} variant="outlined" />
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {row.email}
+                </Typography>
+                <Stack direction="row" flexWrap="wrap" gap={2} useFlexGap>
+                  <Typography variant="body2">
+                    <Box component="span" color="text.secondary">ID </Box>
+                    {row.id}
+                  </Typography>
+                  <Typography variant="body2">
+                    <Box component="span" color="text.secondary">Age </Box>
+                    {row.age}
+                  </Typography>
+                  <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                    <Box component="span" color="text.secondary">Phone </Box>
+                    {row.phone}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Paper>
+          ))}
+        </Stack>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ p: 2, width: "100%", minWidth: 0, maxWidth: "100%" }}>
+      <Header title="Team Members" subtitle="Managing Team Members" />
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
         <Table aria-label="team table" sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>

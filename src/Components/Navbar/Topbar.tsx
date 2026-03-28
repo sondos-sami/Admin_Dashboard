@@ -59,76 +59,85 @@ const drawerWidth = 240;
  
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
+  isMobile?: boolean;
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  height: 64, // ✅ fix: constrain height
-  justifyContent: "center", // center Toolbar vertically
+  shouldForwardProp: (prop) => prop !== "open" && prop !== "isMobile",
+})<AppBarProps & { isMobile: boolean }>(({ theme, open, isMobile }) => ({
+  height: 64,
+  justifyContent: "center",
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+  ...(open &&
+    !isMobile && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["width", "margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
-  }),
 }));
 
  
 type TopbarProps = {
   open: boolean;
-  onOpen: () => void;
+  onMenuToggle: () => void;
+  isMobile: boolean;
 };
 
-export function Topbar({ open, onOpen }: TopbarProps) {
+export function Topbar({ open, onMenuToggle, isMobile }: TopbarProps) {
   const { mode, toggleMode } = useThemeContext();
 
+  const showMenuButton = !open || isMobile;
+
   return (
-    <AppBar position="fixed" open={open}>
-      <Toolbar>
-      
+    <AppBar position="fixed" open={open} isMobile={isMobile}>
+      <Toolbar
+        sx={{
+          gap: { xs: 0.5, sm: 1 },
+          px: { xs: 1, sm: 2 },
+          flexWrap: "nowrap",
+        }}
+      >
         <IconButton
           color="inherit"
-          aria-label="open drawer"
-          onClick={onOpen}
+          aria-label={open && isMobile ? "close drawer" : "open drawer"}
+          onClick={onMenuToggle}
           edge="start"
-          sx={{ marginRight: 5, ...(open && { display: "none" }) }}
+          sx={{
+            mr: { xs: 1, sm: 2 },
+            display: showMenuButton ? "flex" : "none",
+          }}
         >
           <MenuIcon />
         </IconButton>
 
-        {/* Search Box */} 
-        <Search>
+        <Search sx={{ flex: { xs: "1 1 auto", sm: "0 1 auto" }, minWidth: 0 }}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
         </Search>
 
-        {/* Spacer */}
-        <Box flexGrow={4} />
+        <Box sx={{ flexGrow: { xs: 0, md: 4 }, flexShrink: 0 }} />
 
-        {/* Right Side Icons */}
-        <Stack direction="row" spacing={1}>
-          {/* Theme Switcher */}
-          <IconButton color="inherit" onClick={toggleMode}>
+        <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} sx={{ flexShrink: 0 }}>
+          <IconButton color="inherit" onClick={toggleMode} size="small" sx={{ p: { xs: 0.75, sm: 1 } }}>
             {mode === "light" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton color="inherit" sx={{ display: { xs: "none", sm: "inline-flex" } }}>
             <Person2OutlinedIcon />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" sx={{ display: { xs: "none", md: "inline-flex" } }}>
             <NotificationsNoneOutlinedIcon />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" sx={{ display: { xs: "none", md: "inline-flex" } }}>
             <SettingsOutlinedIcon />
           </IconButton>
         </Stack>

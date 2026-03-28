@@ -50,7 +50,7 @@ export default function Form() {
     >
            <Header title="Create User" subtitle="Create a New User Profile"/>
        
-      <Stack direction="row" sx={{ flex: 1, gap: 1 }}>
+      <Stack direction={{ xs: "column", sm: "row" }} sx={{ flex: 1, gap: 1 }}>
         <TextField
           sx={{ flex: 1 }}
           label="First Name"

@@ -12,5 +12,5 @@ interface ScatterChartComponentProps {
     height?: number;
     width?: number | string;
 }
-export default function ScatterChartComponent({ data1, data2, height, width, }: ScatterChartComponentProps): import("react/jsx-runtime").JSX.Element;
+export default function ScatterChartComponent({ data1, data2, height, width: widthProp, }: ScatterChartComponentProps): import("react/jsx-runtime").JSX.Element;
 export {};

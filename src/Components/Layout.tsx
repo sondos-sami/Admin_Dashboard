@@ -14,8 +14,10 @@ export default function Layout() {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          mt: "64px", 
+          minWidth: 0,
+          width: "100%",
+          p: { xs: 1.5, sm: 2, md: 3 },
+          mt: "64px",
         }}
       >
         <Outlet />

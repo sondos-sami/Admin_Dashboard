@@ -9,6 +9,7 @@ export default function Header({title,subtitle}:{title:string,subtitle:string}) 
               fontWeight: "bold",
               color: "primary.main",
               letterSpacing: 1,
+              fontSize: { xs: "1.35rem", sm: "1.5rem", md: "2rem" },
             }}
           >
             {title}

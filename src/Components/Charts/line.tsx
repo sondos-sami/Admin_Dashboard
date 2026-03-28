@@ -1,6 +1,6 @@
- 
 import Box from "@mui/material/Box";
 import { LineChart } from "@mui/x-charts/LineChart";
+import { useChartWidth } from "../../hooks/useChartWidth";
 
 interface LineChartComponentProps {
   uData?: number[];
@@ -15,13 +15,18 @@ export default function LineChartComponent({
   pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300],
   xLabels = ["Page A", "Page B", "Page C", "Page D", "Page E", "Page F", "Page G"],
   height = 300,
-  width = "100%",
+  width: widthProp,
 }: LineChartComponentProps) {
+  const [containerRef, measuredWidth] = useChartWidth();
   const margin = { right: 24 };
+  const chartWidth =
+    typeof widthProp === "number" ? widthProp : measuredWidth;
 
   return (
-    <Box sx={{ width, height }}>
+    <Box ref={containerRef} sx={{ width: widthProp ?? "100%", height, minWidth: 0 }}>
       <LineChart
+        width={chartWidth}
+        height={height}
         series={[
           { data: pData, label: "pv", color: "#1976d2" },
           { data: uData, label: "uv", color: "#9c27b0" },

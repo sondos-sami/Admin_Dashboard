@@ -1,15 +1,23 @@
- import Table from "@mui/material/Table";
+import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {   Box, Checkbox } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Stack,
+  Typography,
+  Chip,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useState } from "react";
 import Header from "../Components/Header";
 
-interface TeamMember {
+interface InvoiceRow {
   id: number;
   name: string;
   age: number;
@@ -18,7 +26,7 @@ interface TeamMember {
   phone: string;
 }
 
-const rows: TeamMember[] = [
+const rows: InvoiceRow[] = [
   { id: 1, name: "John Doe", age: 28, email: "john@example.com", role: "admin", phone: "123-456-7890" },
   { id: 2, name: "Jane Smith", age: 32, email: "jane@example.com", role: "user", phone: "987-654-3210" },
   { id: 3, name: "Robert Brown", age: 41, email: "robert@example.com", role: "manager", phone: "555-111-2222" },
@@ -26,7 +34,15 @@ const rows: TeamMember[] = [
   { id: 5, name: "Michael Johnson", age: 37, email: "michael@example.com", role: "admin", phone: "999-888-7777" },
 ];
 
+function roleChipColor(role: InvoiceRow["role"]) {
+  if (role === "admin") return "error";
+  if (role === "manager") return "primary";
+  return "success";
+}
+
 export default function Invoices() {
+  const theme = useTheme();
+  const isNarrow = useMediaQuery(theme.breakpoints.down("md"));
   const [selected, setSelected] = useState<number[]>([]);
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,11 +59,106 @@ export default function Invoices() {
     );
   };
 
+  if (isNarrow) {
+    return (
+      <Box sx={{ p: { xs: 1, sm: 2 }, width: "100%", minWidth: 0, maxWidth: "100%" }}>
+        <Header title="Invoices" subtitle="" />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, my: 1.5 }}>
+          <Checkbox
+            checked={selected.length === rows.length && rows.length > 0}
+            indeterminate={selected.length > 0 && selected.length < rows.length}
+            onChange={handleSelectAll}
+            inputProps={{ "aria-label": "select all invoices" }}
+          />
+          <Typography variant="body2" color="text.secondary">
+            Select all
+          </Typography>
+        </Box>
+        <Stack spacing={1.5}>
+          {rows.map((row) => (
+            <Paper
+              key={row.id}
+              elevation={1}
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                border: 1,
+                borderColor: "divider",
+              }}
+            >
+              <Stack spacing={1}>
+                <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+                  <Checkbox
+                    checked={selected.includes(row.id)}
+                    onChange={() => handleSelectRow(row.id)}
+                    inputProps={{ "aria-label": `select ${row.name}` }}
+                  />
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: 1,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        {row.name}
+                      </Typography>
+                      <Chip
+                        label={row.role}
+                        size="small"
+                        color={roleChipColor(row.role)}
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, wordBreak: "break-word" }}>
+                      {row.email}
+                    </Typography>
+                    <Stack direction="row" flexWrap="wrap" gap={2} sx={{ mt: 1 }} useFlexGap>
+                      <Typography variant="body2">
+                        <Box component="span" color="text.secondary">
+                          ID{" "}
+                        </Box>
+                        {row.id}
+                      </Typography>
+                      <Typography variant="body2">
+                        <Box component="span" color="text.secondary">
+                          Age{" "}
+                        </Box>
+                        {row.age}
+                      </Typography>
+                      <Typography variant="body2" sx={{ wordBreak: "break-all" }}>
+                        <Box component="span" color="text.secondary">
+                          Phone{" "}
+                        </Box>
+                        {row.phone}
+                      </Typography>
+                    </Stack>
+                  </Box>
+                </Box>
+              </Stack>
+            </Paper>
+          ))}
+        </Stack>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ p: 2 }}>
-    <Header title="Invoices" subtitle=""/>
-      <TableContainer component={Paper} sx={{ width: "100%", overflowX: "auto" }}>
-        <Table aria-label="team table" sx={{ minWidth: 650 }}>
+    <Box sx={{ p: 2, width: "100%", minWidth: 0, maxWidth: "100%" }}>
+      <Header title="Invoices" subtitle="" />
+      <TableContainer
+        component={Paper}
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        <Table aria-label="invoices table" sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
@@ -57,12 +168,24 @@ export default function Invoices() {
                   onChange={handleSelectAll}
                 />
               </TableCell>
-              <TableCell><b>ID</b></TableCell>
-              <TableCell><b>Name</b></TableCell>
-              <TableCell><b>Age</b></TableCell>
-              <TableCell><b>Email</b></TableCell>
-              <TableCell><b>Role</b></TableCell>
-              <TableCell><b>Phone</b></TableCell>
+              <TableCell>
+                <b>ID</b>
+              </TableCell>
+              <TableCell>
+                <b>Name</b>
+              </TableCell>
+              <TableCell>
+                <b>Age</b>
+              </TableCell>
+              <TableCell>
+                <b>Email</b>
+              </TableCell>
+              <TableCell>
+                <b>Role</b>
+              </TableCell>
+              <TableCell>
+                <b>Phone</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -84,8 +207,8 @@ export default function Invoices() {
                       row.role === "admin"
                         ? "red"
                         : row.role === "manager"
-                        ? "blue"
-                        : "green",
+                          ? "blue"
+                          : "green",
                     fontWeight: "bold",
                     textTransform: "capitalize",
                   }}
@@ -101,4 +224,3 @@ export default function Invoices() {
     </Box>
   );
 }
-

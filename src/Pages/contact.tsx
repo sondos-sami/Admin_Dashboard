@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import {
   DataGrid,
   type GridColDef,
-  Toolbar,
   ToolbarButton,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
@@ -27,6 +26,12 @@ import InputAdornment from "@mui/material/InputAdornment";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
+import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import Header from "../Components/Header";
 
 interface ContactRow {
@@ -39,6 +44,59 @@ interface ContactRow {
   city: string;
   address: string;
 }
+
+const contactRows: ContactRow[] = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    phone: "123-456-7890",
+    age: 28,
+    zipCode: "10001",
+    city: "New York",
+    address: "123 Main St",
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    email: "jane@example.com",
+    phone: "987-654-3210",
+    age: 34,
+    zipCode: "90001",
+    city: "Los Angeles",
+    address: "456 Sunset Blvd",
+  },
+  {
+    id: 3,
+    name: "Michael Johnson",
+    email: "michael@example.com",
+    phone: "555-123-4567",
+    age: 41,
+    zipCode: "60601",
+    city: "Chicago",
+    address: "789 Lake Shore Dr",
+  },
+  {
+    id: 4,
+    name: "Emily Davis",
+    email: "emily@example.com",
+    phone: "333-444-5555",
+    age: 25,
+    zipCode: "77001",
+    city: "Houston",
+    address: "101 Pine St",
+  },
+  {
+    id: 5,
+    name: "Robert Brown",
+    email: "robert@example.com",
+    phone: "222-111-9999",
+    age: 38,
+    zipCode: "85001",
+    city: "Phoenix",
+    address: "202 Desert Rd",
+  },
+];
 
 // ---------- STYLES ----------
 type OwnerState = {
@@ -67,7 +125,7 @@ const StyledTextField = styled(TextField)<{
 }>(({ theme, ownerState }) => ({
   gridArea: "1 / 1",
   overflowX: "clip",
-  width: ownerState.expanded ? 260 : "var(--trigger-width)",
+  width: ownerState.expanded ? "min(260px, calc(100vw - 120px))" : "var(--trigger-width)",
   opacity: ownerState.expanded ? 1 : 0,
   transition: theme.transitions.create(["width", "opacity"]),
 }));
@@ -78,9 +136,20 @@ function CustomToolbar() {
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Toolbar>
-      <Typography fontWeight="medium" sx={{ flex: 1, mx: 0.5 }}>
-        Team Members
+    <Toolbar
+      sx={{
+        flexWrap: "wrap",
+        gap: 1,
+        py: 1,
+        px: 1,
+        minHeight: "auto !important",
+        width: "100%",
+        alignItems: "center",
+        rowGap: 1,
+      }}
+    >
+      <Typography fontWeight="medium" sx={{ flex: "1 1 120px", mx: 0.5, minWidth: 0 }}>
+        Contacts
       </Typography>
 
       <Tooltip title="Columns">
@@ -197,7 +266,50 @@ function CustomToolbar() {
 }
 
  
+function ContactMobileCards({ rows }: { rows: ContactRow[] }) {
+  return (
+    <Stack spacing={1.5} sx={{ mt: 1 }}>
+      {rows.map((row) => (
+        <Paper
+          key={row.id}
+          elevation={1}
+          sx={{
+            p: 2,
+            borderRadius: 2,
+            border: 1,
+            borderColor: "divider",
+          }}
+        >
+          <Stack spacing={1}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              {row.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ wordBreak: "break-word" }}>
+              {row.email}
+            </Typography>
+            <Typography variant="body2">{row.phone}</Typography>
+            <Stack direction="row" flexWrap="wrap" gap={2} useFlexGap>
+              <Typography variant="body2" color="text.secondary">
+                Age {row.age}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {row.city}, {row.zipCode}
+              </Typography>
+            </Stack>
+            <Typography variant="body2" sx={{ wordBreak: "break-word" }}>
+              {row.address}
+            </Typography>
+          </Stack>
+        </Paper>
+      ))}
+    </Stack>
+  );
+}
+
 export default function Contact() {
+  const theme = useTheme();
+  const isNarrow = useMediaQuery(theme.breakpoints.down("md"));
+
   const columns: GridColDef<ContactRow>[] = [
     { field: "name", headerName: "Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1.5 },
@@ -208,70 +320,43 @@ export default function Contact() {
     { field: "address", headerName: "Address", flex: 2 },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      phone: "123-456-7890",
-      age: 28,
-      zipCode: "10001",
-      city: "New York",
-      address: "123 Main St",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      phone: "987-654-3210",
-      age: 34,
-      zipCode: "90001",
-      city: "Los Angeles",
-      address: "456 Sunset Blvd",
-    },
-    {
-      id: 3,
-      name: "Michael Johnson",
-      email: "michael@example.com",
-      phone: "555-123-4567",
-      age: 41,
-      zipCode: "60601",
-      city: "Chicago",
-      address: "789 Lake Shore Dr",
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      email: "emily@example.com",
-      phone: "333-444-5555",
-      age: 25,
-      zipCode: "77001",
-      city: "Houston",
-      address: "101 Pine St",
-    },
-    {
-      id: 5,
-      name: "Robert Brown",
-      email: "robert@example.com",
-      phone: "222-111-9999",
-      age: 38,
-      zipCode: "85001",
-      city: "Phoenix",
-      address: "202 Desert Rd",
-    },
-  ];
+  const rows = contactRows;
+
+  if (isNarrow) {
+    return (
+      <Box sx={{ p: { xs: 1, sm: 2 }, width: "100%", minWidth: 0, maxWidth: "100%" }}>
+        <Header title="Contact" subtitle="" />
+        <ContactMobileCards rows={rows} />
+      </Box>
+    );
+  }
 
   return (
-    <div style={{ height: 450, width: "100%" }}>
-      <Header title="Contact" subtitle=""/>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSizeOptions={[5, 10]}
-        disableRowSelectionOnClick
-        slots={{ toolbar: CustomToolbar }}
-        showToolbar
-      />
-    </div>
+    <Box sx={{ width: "100%", minWidth: 0, maxWidth: "100%" }}>
+      <Header title="Contact" subtitle="" />
+      <Box
+        sx={{
+          height: { md: "min(58vh, 440px)", lg: "min(62vh, 480px)" },
+          width: "100%",
+          minHeight: 360,
+          "& .MuiDataGrid-root": { border: "none" },
+        }}
+      >
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSizeOptions={[5, 10]}
+          disableRowSelectionOnClick
+          slots={{ toolbar: CustomToolbar }}
+          showToolbar
+          sx={{
+            width: "100%",
+            height: "100%",
+            "& .MuiDataGrid-main": { overflow: "auto" },
+            "& .MuiDataGrid-virtualScroller": { minHeight: 200 },
+          }}
+        />
+      </Box>
+    </Box>
   );
 }

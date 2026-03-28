@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import FullCalendar from "@fullcalendar/react";
 import type {
   EventApi,
@@ -28,6 +30,8 @@ function createEventId() {
 }
 
 export default function DemoApp() {
+  const theme = useTheme();
+  const isNarrow = useMediaQuery(theme.breakpoints.down("sm"));
   const weekendsVisible = true;
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -106,15 +110,26 @@ export default function DemoApp() {
   }
 
   return (
-    <div className="demo-app" style={{ display: "flex", flexDirection: "column" }}>
-      <div className="demo-app-main" style={{ flex: 1 }}>
+    <div
+      className="demo-app"
+      style={{ display: "flex", flexDirection: "column", width: "100%", minWidth: 0 }}
+    >
+      <div className="demo-app-main" style={{ flex: 1, minWidth: 0, overflowX: "auto" }}>
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "prev,next today",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
+          headerToolbar={
+            isNarrow
+              ? {
+                  left: "prev,next",
+                  center: "title",
+                  right: "today",
+                }
+              : {
+                  left: "prev,next today",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay",
+                }
+          }
           initialView="dayGridMonth"
           editable={true}
           selectable={true}

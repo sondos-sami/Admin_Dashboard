@@ -64,7 +64,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const Drawer = styled(MuiDrawer, {
+const DesktopDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })<{ open: boolean }>(({ theme, open }) => ({
   width: drawerWidth,
@@ -84,6 +84,7 @@ const Drawer = styled(MuiDrawer, {
 type SidebarProps = {
   open: boolean;
   onClose: () => void;
+  isMobile: boolean;
 };
 
 const array1 = [
@@ -106,27 +107,30 @@ const array3 = [
   { text: "Geography Chart", icon: <MapOutlinedIcon />, path: "/geography" },
 ];
 
-export function Sidebar({ open, onClose }: SidebarProps) {
+export function Sidebar({ open, onClose, isMobile }: SidebarProps) {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
-  return (
-    <Drawer variant="permanent" open={open}>
-      {/* Drawer Toggle */}
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    if (isMobile) onClose();
+  };
+
+  const drawerContent = (
+    <>
       <DrawerHeader>
-        <IconButton onClick={onClose}>
+        <IconButton onClick={onClose} aria-label="collapse navigation">
           {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </DrawerHeader>
 
-      {/* Avatar & User Info */}
       <Avatar
         sx={{
           mx: "auto",
           my: 1,
-          width: open ? 64 : 40,
-          height: open ? 64 : 40,
+          width: open || isMobile ? 64 : 40,
+          height: open || isMobile ? 64 : 40,
           transition: "all 0.3s ease",
         }}
         alt="Sondos Sami"
@@ -135,8 +139,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       <Typography
         align="center"
         sx={{
-          fontSize: open ? 15 : 0,
-          opacity: open ? 1 : 0,
+          fontSize: open || isMobile ? 15 : 0,
+          opacity: open || isMobile ? 1 : 0,
           transition: "all 0.3s ease",
         }}
       >
@@ -145,8 +149,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       <Typography
         align="center"
         sx={{
-          fontSize: open ? 14 : 0,
-          opacity: open ? 1 : 0,
+          fontSize: open || isMobile ? 14 : 0,
+          opacity: open || isMobile ? 1 : 0,
           transition: "all 0.3s ease",
           color: theme.palette.info.main,
         }}
@@ -156,7 +160,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       <Divider />
 
-      {/* Navigation Sections */}
       {[array1, array2, array3].map((array, idx) => (
         <React.Fragment key={idx}>
           <List>
@@ -166,7 +169,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   sx={{
                     minHeight: 48,
                     px: 2.5,
-                    justifyContent: open ? "initial" : "center",
+                    justifyContent: open || isMobile ? "initial" : "center",
                     transition: "all 0.3s ease",
                     bgcolor:
                       location.pathname === item.path
@@ -175,12 +178,12 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                           : grey[300]
                         : "transparent",
                   }}
-                  onClick={() => navigate(item.path)}
+                  onClick={() => handleNavigate(item.path)}
                 >
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
-                      mr: open ? 3 : "auto",
+                      mr: open || isMobile ? 3 : "auto",
                       justifyContent: "center",
                       transition: "all 0.3s ease",
                     }}
@@ -190,7 +193,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   <ListItemText
                     primary={item.text}
                     sx={{
-                      opacity: open ? 1 : 0,
+                      opacity: open || isMobile ? 1 : 0,
                       transition: "all 0.3s ease",
                     }}
                   />
@@ -201,6 +204,32 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <Divider />
         </React.Fragment>
       ))}
-    </Drawer>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <MuiDrawer
+        variant="temporary"
+        anchor="left"
+        open={open}
+        onClose={onClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        {drawerContent}
+      </MuiDrawer>
+    );
+  }
+
+  return (
+    <DesktopDrawer variant="permanent" open={open}>
+      {drawerContent}
+    </DesktopDrawer>
   );
 }
