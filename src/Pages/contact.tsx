@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import {
   DataGrid,
   type GridColDef,
+  Toolbar,
   ToolbarButton,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
@@ -26,7 +27,6 @@ import InputAdornment from "@mui/material/InputAdornment";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
@@ -130,24 +130,25 @@ const StyledTextField = styled(TextField)<{
   transition: theme.transitions.create(["width", "opacity"]),
 }));
 
+/** MUI X Toolbar — required parent for ToolbarButton, QuickFilter, etc. (provides context). */
+const StyledGridToolbar = styled(Toolbar)(({ theme }) => ({
+  flexWrap: "wrap",
+  gap: theme.spacing(1),
+  padding: theme.spacing(1),
+  minHeight: "auto !important",
+  width: "100%",
+  alignItems: "center",
+  rowGap: theme.spacing(1),
+  justifyContent: "flex-start",
+}));
+
 // ---------- TOOLBAR ----------
 function CustomToolbar() {
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <Toolbar
-      sx={{
-        flexWrap: "wrap",
-        gap: 1,
-        py: 1,
-        px: 1,
-        minHeight: "auto !important",
-        width: "100%",
-        alignItems: "center",
-        rowGap: 1,
-      }}
-    >
+    <StyledGridToolbar>
       <Typography fontWeight="medium" sx={{ flex: "1 1 120px", mx: 0.5, minWidth: 0 }}>
         Contacts
       </Typography>
@@ -261,7 +262,7 @@ function CustomToolbar() {
           )}
         />
       </StyledQuickFilter>
-    </Toolbar>
+    </StyledGridToolbar>
   );
 }
 
